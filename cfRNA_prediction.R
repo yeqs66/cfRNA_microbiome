@@ -273,11 +273,11 @@ X_all_scaled <- scale(X_all, center = m_all, scale = s_all)
   # Train the final model on all training data using the best hyperparameters
   final_model <- build_model(
   input_dim = ncol(X_all),
-  units1   = results[[11]]$params$units1,
-  units2   = results[[11]]$params$units2,
-  dropout1 = results[[11]]$params$dropout1,
-  dropout2 = results[[11]]$params$dropout2,
-  l2reg    = results[[11]]$params$l2reg
+  units1   = results[[best_idx]]$params$units1,
+  units2   = results[[best_idx]]$params$units2,
+  dropout1 = results[[best_idx]]$params$dropout1,
+  dropout2 = results[[best_idx]]$params$dropout2,
+  l2reg    = results[[best_idx]]$params$l2reg
 )
 
 final_model %>% fit(
