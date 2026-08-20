@@ -1,10 +1,6 @@
 # cfRNA_microbiome
 Integrative analysis of plasma cell-free RNA and gut microbiome reveal novel molecular signatures in GDM
 
-# Multi-Omics Visualization Pipeline for GDM Research
-
-This repository provides a set of self contained R scripts to reproduce key figures from a multi omics study of gestational diabetes mellitus (GDM). The pipeline covers cell free RNA (cfRNA), gut microbiome (KO), and metabolomics data, including differential expression, pathway enrichment, WGCNA, MOFA integration, and machine learning prediction.
-
 All scripts use simulated data to demonstrate the plotting logic. They are ready to run without any external input files and can be easily adapted to real datasets.
 
 ---
@@ -42,7 +38,8 @@ All scripts use simulated data to demonstrate the plotting logic. They are ready
 
 > Note: The scripts in this repository primarily use R packages. Python packages (scikit learn, TensorFlow) are listed for completeness as they were used in the original study, but the provided R scripts rely only on R dependencies (the figure generation does not require Python). The R packages can be installed as follows:
 
-r
+
+```r
 # CRAN packages
 install.packages(c(
   "ggplot2", "ggrepel", "dplyr", "tidyr", "patchwork",
@@ -55,26 +52,26 @@ if (!require("BiocManager", quietly = TRUE))
 BiocManager::install(c(
   "limma", "ComplexHeatmap", "circlize", "sva", "clusterProfiler"
 ))
-
+```
 
 ---
 
 ## Usage
 
 ### Run a single script
-bash
+```bash
 Rscript fig2.r
-
+```
 
 ### Run all figure scripts
-bash
+```bash
 for f in fig.r; do Rscript $f; done
-
+```
 
 ### Adapt to your own data
-1. Replace the mock data generation blocks (e.g., set.seed() + rnorm()/runif()) with your actual data frames.
-2. Ensure column names match those expected in the plotting code (e.g., logFC, p.adjust, NES, pathway).
-3. Adjust thresholds (e.g., logFC > 0.15, p.adjust < 0.05) to fit your analysis.
+1. Replace the mock data generation blocks (e.g., `set.seed()` + `rnorm()`/`runif()`) with your actual data frames.
+2. Ensure column names match those expected in the plotting code (e.g., `logFC`, `p.adjust`, `NES`, `pathway`).
+3. Adjust thresholds (e.g., `logFC > 0.15`, `p.adjust < 0.05`) to fit your analysis.
 
 ---
 
@@ -82,26 +79,26 @@ for f in fig.r; do Rscript $f; done
 
 | Script | Output |
 |--------|--------|
-| fig2.r   fig6.r | Displays plots in the active graphics device. |
-| fig4.r | Also saves Figure4B_fan.pdf (circular GSEA plot) in the working directory. |
-| Metabolomics analysis.r | Displays volcano and boxplots; writes metabolite_results.csv (mock results). |
-| Sensitivity analysis.r | Displays scatter and bar plots; prints metric table to console. |
+| `fig2.r` – `fig6.r` | Displays plots in the active graphics device. |
+| `fig4.r` | Also saves `Figure4B_fan.pdf` (circular GSEA plot) in the working directory. |
+| `Metabolomics analysis.r` | Displays volcano and boxplots; writes `metabolite_results.csv` (mock results). |
+| `Sensitivity analysis.r` | Displays scatter and bar plots; prints metric table to console. |
 
-To save any plot as a PDF, uncomment the ggsave() lines at the end of the scripts.
+To save any plot as a PDF, uncomment the `ggsave()` lines at the end of the scripts.
 
 ---
 
 ## Notes
 
-- All scripts are fully self contained and require no external data files.
-- The circular GSEA plot in fig4.r uses circlize and is saved as a PDF because it cannot be embedded directly in a ggplot layout.
+- All scripts are fully self‑contained and require no external data files.
+- The circular GSEA plot in `fig4.r` uses `circlize` and is saved as a PDF because it cannot be embedded directly in a `ggplot` layout.
 - The scripts are designed for reproducibility and educational purposes; they illustrate the visualisation pipeline without exposing real patient data.
 
 ---
 
 ## License
 
-This project is licensed under the MIT License   see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
 
 ---
 
@@ -114,3 +111,4 @@ If you use these scripts in your work, please cite our manuscript (citation deta
 ## Contact
 
 For questions or suggestions, please open an issue on this repository or contact the corresponding author.
+
