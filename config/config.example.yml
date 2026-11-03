@@ -1,0 +1,33 @@
+# Copy to config/local.yml (ignored by Git). Paths relative to that config file.
+output_dir: ../outputs
+inputs:
+  network: ../data/private/bcaa_network.csv
+  metabolomics: ../data/private/metabolomics.csv
+  metabolite_map: ../data/private/metabolite_map.csv
+  metadata: ../data/private/metadata.csv
+  counts: ../data/private/counts.rds
+feature_sets:
+  Microbiome: [K11381, K00826]
+  cfRNA: [HSD17B10, ACAA2]
+  Metabolome: [Isoleucine, L-Leucine(Leu)]
+# These features are examples, not the complete manuscript membership lists.
+network:
+  min_n: 20
+  max_missing: 0.50
+  min_micro_prevalence: 0.10
+  rho_cutoff: 0.10
+  fdr_cutoff: 0.05
+  p_adjust_method: BH
+  max_plot_edges: 80
+  include_all: true
+acknowledge_legacy_limma: false
+reference_stages:
+  wgcna:
+    reviewed: false
+    reference: reference/wgcna/01.R
+    globals_rds: ../data/private/wgcna_objects.rds
+    paths:
+      __PATH_001__: ../data/private/wgcna_objects.rds
+    # Supply all tokens listed for this script in reference_path_tokens.json.
+    # Also map relative input/output literals where necessary. The example is
+    # intentionally not executable until the recipe and audit are reviewed.

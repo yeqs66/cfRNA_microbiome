@@ -1,0 +1,13 @@
+# All data generated in memory. Output is ignored by Git.
+output_dir: ../outputs
+network:
+  min_n: 20
+  max_missing: 0.50
+  min_micro_prevalence: 0.10
+  rho_cutoff: 0.10
+  fdr_cutoff: 0.05
+  p_adjust_method: BH
+  max_plot_edges: 80
+  label_top_n: 20
+  seed: 2026
+  include_all: true

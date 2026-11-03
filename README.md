@@ -1,114 +1,48 @@
-# cfRNA_microbiome
-Integrative analysis of plasma cell-free RNA and gut microbiome reveal novel molecular signatures in GDM
+# cfRNA–microbiome: manuscript v9 code organization
 
-All scripts use simulated data to demonstrate the plotting logic. They are ready to run without any external input files and can be easily adapted to real datasets.
+**Longitudinal Multi-omics Profiling Reveals Systematic Host–Microbiome Metabolic Dysregulation in Gestational Diabetes Mellitus**
 
----
+This is a source-backed, **partially configured** manuscript research project. At the author's request, validation is **static only**: no study data are opened and no models, simulations or numerical reproduction are run. Do not batch-run historical scripts on a personal workstation.
 
-## Repository Contents
+请先阅读：[论文与代码不一致核对清单（中文）](docs/manuscript_v9_code_audit.md)。缺失或不一致的实现留待作者确认，没有按稿件补写算法或调整统计结果。
 
-| File | Description |
-|------|-------------|
-| Data processing.r | Simulated preprocessing: low expression filtering, variance selection, log2 transformation, ComBat batch correction, MOFA input construction, and sample anonymization. |
-| fig2.r | Figure 2   Volcano plot (DEGs) + GSEA bubble plot (KEGG pathways across trimesters). |
-| fig3.r | Figure 3   Donut charts (cell type origins), trophoblast boxplots, WGCNA module enrichment heatmap, and module trait correlation heatmap. |
-| fig4.r | Figure 4   Species dotplot, circular GSEA fan plot for microbiome KOs, and pathway specific boxplots. |
-| fig5.r | Figure 5   MOFA variance explained barplot, factor trait correlation heatmap, and back to back lollipop plot for miRNA target enrichment. |
-| fig6.r | Figure 6   ROC curves for GDM prediction models (cfRNA, cfRNA+BMI, cfRNA+KO) and BMI z score prediction scatter/selection plots. |
-| Metabolomics analysis.r | Metabolite differential testing (Wilcoxon) for BCAA, SCFA, and bile acids, plus volcano and boxplot visualizations. |
-| Sensitivity analysis.r | Sensitivity metrics (Jaccard, Spearman, Kappa) and scatter plots comparing alternative covariate models. |
-| README.md | This file. |
+## Contents and provenance
 
----
+- [Inventory](docs/script_inventory.md) and [detailed records](docs/script_inventory.json): 139 source R scripts, original SHA-256, input/output references, packages and selection status.
+- 54 damaged/undecodable sources excluded; 44 selected candidates in `reference/`, with private absolute paths replaced by configuration placeholders. These are review materials, not confirmed final versions for every figure.
+- Independent interfaces for the original network function, original metabolite LMM functions, and historical miRNA/lncRNA limma code. Legacy limma contrasts and filtering require review before real-data use.
+- An opt-in adapter for reviewed historical sources with configured paths/upstream objects. Missing sequencing, deconvolution and nested-CV implementations are not fabricated.
+- Old repository code retained unchanged under `legacy/pre_v9/`. The complete old main is preserved on `archive/pre-v9-20261102`, commit `4cf58be1f88b5eb21b878c8a55da1589003ef4f8`.
 
-## Software and Algorithms
+## Static review
 
-| Software / Package | Version | Reference / URL |
-|---------------------|---------|-----------------|
-| R | 4.2.2 | [https://www.r-project.org/](https://www.r-project.org/) |
-| limma | 3.54.2 | [https://bioinf.wehi.edu.au/limma/](https://bioinf.wehi.edu.au/limma/) |
-| ggplot2 | 4.0.3 | [https://ggplot2.tidyverse.org/](https://ggplot2.tidyverse.org/) |
-| ggraph | 2.1.0 | [https://github.com/thomasp85/ggraph](https://github.com/thomasp85/ggraph) |
-| lme4 | 1.1 31 | [https://github.com/lme4/lme4](https://github.com/lme4/lme4) |
-| lmerTest | 3.1 3 | [https://github.com/runehaubo/lmerTestR](https://github.com/runehaubo/lmerTestR) |
-| clusterProfiler | 4.6.0 | Yu, G. et al.[64,65]   [https://github.com/YuLab-SMU/clusterProfiler](https://github.com/YuLab-SMU/clusterProfiler) |
-| MOFA2 | (latest) | Argelaguet, R. et al.[66]   [https://github.com/bioFAM/MOFA2](https://github.com/bioFAM/MOFA2) |
-| scikit learn (sklearn) | 1.1.2 | Pedregosa, F. et al.[67]   [https://scikit-learn.org/](https://scikit-learn.org/) |
-| TensorFlow | 2.9.1 | Martin, A.[68]   [https://www.tensorflow.org/](https://www.tensorflow.org/) |
-
-> Note: The scripts in this repository primarily use R packages. Python packages (scikit learn, TensorFlow) are listed for completeness as they were used in the original study, but the provided R scripts rely only on R dependencies (the figure generation does not require Python). The R packages can be installed as follows:
-
-
-```r
-# CRAN packages
-install.packages(c(
-  "ggplot2", "ggrepel", "dplyr", "tidyr", "patchwork",
-  "MatrixGenerics", "pROC", "lme4", "lmerTest"
-))
-
-# Bioconductor packages
-if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install(c(
-  "limma", "ComplexHeatmap", "circlize", "sva", "clusterProfiler"
-))
+```sh
+Rscript scripts/check_syntax.R
 ```
 
----
+This parses code without evaluating it or loading study matrices. See [static report](docs/static_syntax_report.csv). The pipeline has no implicit run-all command and does not run without explicit stage/mode arguments.
 
-## Usage
+## Future optional execution — not tested in this release
 
-### Run a single script
-```bash
-Rscript fig2.r
+Read [input contracts](docs/input_contracts.md), [coverage](docs/analysis_coverage.md), and the audit before execution. Copy `config/config.example.yml` to ignored `config/local.yml`, configure authorized data paths and author-confirmed feature membership.
+
+```sh
+# Future small synthetic example; NOT executed as part of this delivery
+Rscript scripts/run_pipeline.R --config config/demo.yml --stage network --mode demo
+
+# Future real-data run after audit and data review
+Rscript scripts/run_pipeline.R --config config/local.yml --stage network --mode real
+Rscript scripts/run_pipeline.R --config config/local.yml --stage metabolomics_lmm --mode real
 ```
 
-### Run all figure scripts
-```bash
-for f in fig.r; do Rscript $f; done
-```
+Other standalone stages: `limma_mirna`, `limma_lncrna`. Real limma runs require `acknowledge_legacy_limma: true`. Unknown/missing stages stop clearly. Reference recipes require `reviewed: true`, paths and upstream objects; that flag is not a claim of reproducibility.
 
-### Adapt to your own data
-1. Replace the mock data generation blocks (e.g., `set.seed()` + `rnorm()`/`runif()`) with your actual data frames.
-2. Ensure column names match those expected in the plotting code (e.g., `logFC`, `p.adjust`, `NES`, `pathway`).
-3. Adjust thresholds (e.g., `logFC > 0.15`, `p.adjust < 0.05`) to fit your analysis.
+Each future run uses a separate output directory and records mode, configuration, completion/failure and software environment. The network exports all tests/significant edges separately from its display subset. Pooled correlations do not adjust repeated observations.
 
----
+## Dependencies, data and limitations
 
-## Output
+See [dependencies](docs/dependencies.md) and [validation record](docs/validation.md). Packages/resources are not installed or downloaded automatically. No guessed historical `renv.lock` is supplied. Original data, private clinical records, identities, manuscript DOCX and pretrained models are not bundled.
 
-| Script | Output |
-|--------|--------|
-| `fig2.r` – `fig6.r` | Displays plots in the active graphics device. |
-| `fig4.r` | Also saves `Figure4B_fan.pdf` (circular GSEA plot) in the working directory. |
-| `Metabolomics analysis.r` | Displays volcano and boxplots; writes `metabolite_results.csv` (mock results). |
-| `Sensitivity analysis.r` | Displays scatter and bar plots; prints metric table to console. |
+The new wrappers have passed **syntax parsing only**. Runtime behavior, wrapper/source numerical equivalence, resource needs and manuscript AUC/R²/P/FDR remain unverified. `reference/` line order is retained; original paths/hashes map through the inventory. Source candidates may contain obsolete blocks requiring manual review.
 
-To save any plot as a PDF, uncomment the `ggsave()` lines at the end of the scripts.
-
----
-
-## Notes
-
-- All scripts are fully self‑contained and require no external data files.
-- The circular GSEA plot in `fig4.r` uses `circlize` and is saved as a PDF because it cannot be embedded directly in a `ggplot` layout.
-- The scripts are designed for reproducibility and educational purposes; they illustrate the visualisation pipeline without exposing real patient data.
-
----
-
-## License
-
-This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
-
----
-
-## Citation
-
-If you use these scripts in your work, please cite our manuscript (citation details will be added upon publication).
-
----
-
-## Contact
-
-For questions or suggestions, please open an issue on this repository or contact the corresponding author.
-
+The previous README's blanket description of all code as simulated does not apply to the new project. This organization does not change licensing: the previous README mentioned MIT but the inspected tree did not contain a LICENSE file; confirm licensing before further redistribution.

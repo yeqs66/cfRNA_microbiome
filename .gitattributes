@@ -1,0 +1,11 @@
+/README.md text eol=lf
+/R/*.R text eol=lf
+/scripts/*.R text eol=lf
+/config/* text eol=lf
+/docs/* text eol=lf
+/reference/**/*.R text eol=lf
+# Historical snapshots intentionally retain original whitespace for line mapping.
+/reference/** -whitespace
+/.gitattributes text eol=lf
+/.gitignore text eol=lf
+/legacy/pre_v9/README.md text eol=lf
